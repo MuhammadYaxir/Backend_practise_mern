@@ -7,13 +7,13 @@ import morgan from 'morgan';
 import cors from 'cors';
 
 const app = express();
-app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 // const port = 3000;
 dotenv.config();
 const port = process.env.PORT;
+app.use(cors());
 
 // db.connect();
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))

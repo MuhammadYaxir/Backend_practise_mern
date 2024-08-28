@@ -42,10 +42,28 @@ export const updateData =  async (req, res) => {
             { $set: req.body },
             { new: true }
         );
-        res.json(updatedItem);
+        if(!updateData){
+            return res.status(404).json({message: 'Item not found'});
+          }
+            res.json(updatedItem);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
+};
+// FIND BY ID
+export const getById = async (req, res) => {
+  try {
+    const itemId = req.params.id;
+    const item = await User.findById(itemId);
+
+    if (!item) {
+      return res.status(404).send('Item not found');
+    }
+
+    res.json(item);
+  } catch (err) {
+    res.status(500).send('Server error');
+  }
 };
 
 
