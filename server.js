@@ -5,11 +5,14 @@ import connectDB from './config/db.js';
 import router from './routes/user.js';
 import morgan from 'morgan';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 const app = express();
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 // const port = 3000;
 dotenv.config();
 const port = process.env.PORT;

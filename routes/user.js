@@ -1,6 +1,6 @@
 import express from 'express';
 import { createUser, getUserData, updateData, deleteData, getById } from '../controller/user.js';
-import { loginUser, registerUser } from '../controller/auth.js';
+import { authenticateToken, loginUser, logoutUser, registerUser } from '../controller/auth.js';
 
 
 const router = express.Router();
@@ -22,5 +22,7 @@ router.delete('/delete-user/:id', deleteData);
 router.get('/get-user/:id', getById);
 router.post('/register/user', registerUser);
 router.post('/login/user', loginUser)
+router.post('/logout/user', logoutUser)
+router.get('/protected', authenticateToken)
 
 export default router;
