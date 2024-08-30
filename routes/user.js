@@ -1,6 +1,7 @@
 import express from 'express';
 import { createUser, getUserData, updateData, deleteData, getById } from '../controller/user.js';
-import { authenticateToken, loginUser, logoutUser, registerUser } from '../controller/auth.js';
+import { loginUser, logoutUser, registerUser } from '../controller/auth.js';
+import { authentication } from '../middleware/middleware.js';
 
 
 const router = express.Router();
@@ -16,13 +17,13 @@ const router = express.Router();
 
 
 router.post('/create-user', createUser);
-router.get('/get-user', getUserData);
+router.get('/get-user',authentication, getUserData);
 router.put('/update-user/:id', updateData);
 router.delete('/delete-user/:id', deleteData);
-router.get('/get-user/:id', getById);
+router.get('/getbyid/:id', getById);
 router.post('/register/user', registerUser);
 router.post('/login/user', loginUser)
 router.post('/logout/user', logoutUser)
-router.get('/protected', authenticateToken)
+router.get('/protected', authentication)
 
 export default router;

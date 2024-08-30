@@ -1,11 +1,10 @@
-import { MongoCryptAzureKMSRequestError } from "mongodb";
 import User from "../models/user.js";
 
 export const createUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password, role) {
         return res.status(400).json({ message: "Please enter all fields" });
       }
       const isEmailExisted = await User.findOne({ email });
@@ -13,7 +12,7 @@ export const createUser = async (req, res) => {
         return res.status(400).json({ message: "Email already exists" });
       }
 
-    const user = new User({ name, email, password });
+    const user = new User({ name, email, password, role });
     await user.save();
     res.status(201).json({
         message: "User created successfully",

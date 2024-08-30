@@ -3,15 +3,16 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import { token } from "morgan";
 
 dotenv.config();
 
 // register user
 export const registerUser = async (req, res) => {
     try {
-      const { name, email, password } = req.body;
+      const { name, email, password, role } = req.body;
   
-      if (!name || !email || !password) {
+      if (!name || !email || !password, role) {
           return res.status(400).json({ message: "Please enter all fields" });
         }
         const isEmailExisted = await User.findOne({ email });
@@ -28,6 +29,7 @@ export const registerUser = async (req, res) => {
           message: "User created successfully",
           success: true,
           data: user,
+        
       });
     } catch (error) {
       res.status(400).json({ message: error.message });
@@ -35,16 +37,16 @@ export const registerUser = async (req, res) => {
   };
 
   // Middleware to verify JWT
- export function authenticateToken(req, res, next) {
-    const token = req.cookies.authToken;
-    if (token == null) return res.sendStatus(401);
+//  export function authenticateToken(req, res, next) {
+//     const token = req.cookies.authToken;
+//     if (token == null) return res.sendStatus(401);
   
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-      if (err) return res.sendStatus(403);
-      req.user = user;
-      next();
-    });
-  }
+//     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+//       if (err) return res.sendStatus(403);
+//       req.user = user;
+//       next();
+//     });
+//   }
 
 //  login user
   export const loginUser = async (req, res) => {
@@ -62,9 +64,10 @@ export const registerUser = async (req, res) => {
         return res.status(400).json({ message: "Invalid credentials" });
       }
     //   jwt
-      const token = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_SECRET, { expiresIn: "1d" });
+      const token = jwt.sign({ id: user._id, name: user.name, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
     //   Cookies
-      res.cookie('authToken', token, { httpOnly: true, maxAge: 3600000 });
+      res.cookie('authToken', token, { httpOnly: true, maxAge: 3600000, secure: true, sameSite: 'strict' });
+
 
       res.status(200).json({
         message: "User logged in successfully",
@@ -85,6 +88,6 @@ export const registerUser = async (req, res) => {
   };
 
   // Protected route
-    export const protectedRoute =  (req, res) => {
-    res.send('This is a protected route');
-  };
+  //   export const protectedRoute =  (req, res) => {
+  //   res.send('This is a protected route');
+  // };
